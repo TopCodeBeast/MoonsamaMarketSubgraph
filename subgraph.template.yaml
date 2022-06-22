@@ -1,0 +1,170 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  # RECOGNIZED COLLECTIONS - TRACK "FEATURED" TOKENS
+  - kind: ethereum/contract
+    name: RecognizedCollections
+    network: {{ network }}
+    source:
+      address: "{{ recognizedCollections.address }}"
+      abi: RecognizedCollections
+      startBlock: {{ recognizedCollections.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/recognizedCollections.ts
+      entities:
+        - RecognizedCollection
+        - ERC20
+        - ERC721
+        - ERC1155
+        - Metadata
+        - Assett
+        - Attribute
+      abis:
+        - name: RecognizedCollections
+          file: ./abis/RecognizedCollections.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC721
+          file: ./abis/ERC721.json
+        - name: ERC1155
+          file: ./abis/ERC1155.json
+        - name: IERC721Enumerable
+          file: ./abis/IERC721Enumerable.json
+      eventHandlers:
+        - event: CollectionChanged(indexed address,indexed uint256,indexed bool)
+          handler: onCollectionChanged
+  # MARKETPLACE V1 - ORDER BOOK
+  - kind: ethereum/contract
+    name: MarketplaceV1
+    network: {{ network }}
+    source:
+      address: "{{ marketplaceV1.address }}"
+      abi: MarketplaceV1
+      startBlock: {{ marketplaceV1.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/marketplaceV1.ts
+      entities:
+        - Order
+        - Fill
+        - Cancel
+        - User
+        - Escrowbalance
+        - PaymentToken
+        - LastTradedPrice
+        - CollectionStat
+        - TokenStat
+      abis:
+        - name: MarketplaceV1
+          file: ./abis/MarketplaceV1.json
+      eventHandlers:
+        - event: Order(indexed bytes32,indexed address,indexed address,uint256,uint256,address,uint256,uint256,bytes32,uint256,uint256)
+          handler: onOrder
+        - event: Fill(indexed bytes32,indexed address,uint256,uint256,uint256,uint256,bool)
+          handler: onFill
+        - event: Cancel(indexed bytes32,uint256)
+          handler: onCancel
+        - event: PaymentTokenSet(address,uint8,bool)
+          handler: onPaymentToken
+  # MARKETPLACE V2 - ORDER BOOK
+  - kind: ethereum/contract
+    name: MarketplaceV2
+    network: {{ network }}
+    source:
+      address: "{{ marketplaceV2.address }}"
+      abi: MarketplaceV2
+      startBlock: {{ marketplaceV2.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/marketplaceV2.ts
+      entities:
+        - Order
+        - Fill
+        - Cancel
+        - User
+        - Escrowbalance
+        - PaymentToken
+        - LastTradedPrice
+        - CollectionStat
+        - TokenStat
+      abis:
+        - name: MarketplaceV2
+          file: ./abis/MarketplaceV2.json
+      eventHandlers:
+        - event: Order(indexed bytes32,indexed address,indexed address,uint256,uint256,address,uint256,uint256,bytes32,uint256,uint256)
+          handler: onOrder
+        - event: Fill(indexed bytes32,indexed address,uint256,uint256,uint256,uint256,bool)
+          handler: onFill
+        - event: Cancel(indexed bytes32,uint256)
+          handler: onCancel
+        - event: PaymentTokenManagerSet(address)
+          handler: onPaymentTokenManagerSet
+    # STRATEGY REGISTRY
+  - kind: ethereum/contract
+    name: StrategyRegistry
+    network: {{ network }}
+    source:
+      address: "{{ strategyRegistry.address }}"
+      abi: StrategyRegistry
+      startBlock: {{ strategyRegistry.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/strategyRegistry.ts
+      entities:
+        - StrategyMap
+      abis:
+        - name: StrategyRegistry
+          file: ./abis/StrategyRegistry.json
+      eventHandlers:
+        - event: StrategyChanged(indexed bytes32,indexed address)
+          handler: onStrategyChanged
+templates:
+  - name: SimpleOrderStrategyContract
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: SimpleOrderStrategy
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/simpleOrderStrategy.ts
+      entities:
+        - Order
+      abis:
+        - name: SimpleOrderStrategy
+          file: ./abis/SimpleOrderStrategy.json
+      eventHandlers:
+        - event: SimpleOrderStrategyCreated(indexed bytes32,uint256,uint256,uint256,uint128,uint128,address,bool)
+          handler: onSimpleOrderStrategyCreated
+  - name: PaymentTokenManagerContract
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: PaymentTokenManager
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/paymentTokenManager.ts
+      entities:
+        - PaymentToken
+        - DefaultPaymentToken
+      abis:
+        - name: PaymentTokenManager
+          file: ./abis/PaymentTokenManager.json
+      eventHandlers:
+        - event: RegisteredPaymentTokenSet(address,address,uint256,address,bool)
+          handler: onRegisteredPaymentTokenSet
+        - event: DefaultPaymentTokenSet(uint256,address,bool)
+          handler: onDefaultPaymentTokenSet

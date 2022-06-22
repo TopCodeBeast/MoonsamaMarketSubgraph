@@ -1,0 +1,19 @@
+{
+    "network": "moonriver",
+    "recognizedCollections": {
+        "address": "0x45613dAd51D4262dB6c0F94Fc96435D8800500cD",
+        "startBlock": 562960
+    },
+    "marketplaceV1": {
+        "address": "0x56f33FaAc598f6761bE886506bD41eC2304D74af",
+        "startBlock": 562960
+    },
+    "marketplaceV2": {
+        "address": "0x7292b493c3b6E02d025fC0340846a2fCA8b424e7",
+        "startBlock": 1236438
+    },
+    "strategyRegistry": {
+        "address": "0x32328B9431C251C23d3FA81280255601Cf938cE5",
+        "startBlock": 562960
+    }
+}

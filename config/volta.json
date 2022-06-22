@@ -1,0 +1,15 @@
+{
+    "network": "volta",
+    "recognizedCollections": {
+        "address": "0xe35D9ACD226165d21d8bC7cf2C6D71b0deCb67d6",
+        "startBlock": 13648314
+    },
+    "marketplaceV1": {
+        "address": "0xE1681925E9d1fa2c735184835b348a98c34017C7",
+        "startBlock": 13648314
+    },
+    "strategyRegistry": {
+        "address": "0xC842A16117B6f5A336D7882B2C840C556e7C88c7",
+        "startBlock": 13648314
+    }
+}

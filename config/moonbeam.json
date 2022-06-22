@@ -1,0 +1,19 @@
+{
+    "network": "moonbeam",
+    "recognizedCollections": {
+        "address": "0x9b7c849864F246b1A963fdbbbfC198083e646e5b",
+        "startBlock": 178267
+    },
+    "marketplaceV1": {
+        "address": "0x56f33FaAc598f6761bE886506bD41eC2304D74af",
+        "startBlock": 178267
+    },
+    "marketplaceV2": {
+        "address": "0x46B6062Ad95239e30E3506f42147D5cCA00B5f0E",
+        "startBlock": 178267
+    },
+    "strategyRegistry": {
+        "address": "0x3E988138e05C60bC4618101d0f0B1C7016594046",
+        "startBlock": 178267
+    }
+}

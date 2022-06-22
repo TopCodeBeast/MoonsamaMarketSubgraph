@@ -1,0 +1,233 @@
+# our tracked (featured) collections
+type RecognizedCollection @entity {
+  # collection address
+  id: ID!
+  # enum AssetType {UNKNOWN NATIVE ERC20 ERC721 ERC1155}
+  assetType: AssetType!
+  # true = tracked
+  isAdded: Boolean!
+}
+
+# fyi assembly script doesn't seem to honour enums and treats as string
+enum AssetType {
+  UNKNOWN
+  NATIVE
+  ERC20
+  ERC721
+  ERC1155
+}
+
+enum OrderType {
+  BUY
+  SELL
+}
+
+# static erc20 data
+type ERC20 @entity {
+  # token address
+  id: ID!
+  name: String!
+  symbol: String!
+  decimals: Int!
+  totalSupply: BigInt!
+  maxSupply: BigInt!
+}
+
+# static erc721 data
+type ERC721 @entity {
+  # token address
+  id: ID!
+  name: String!
+  symbol: String!
+  owner: String!
+  secondaryFeeBps: BigInt!
+  secondaryFeeTo: String!
+  # note: not possible to know tokenIDs up front; need to query token URI on ad-hoc basis
+}
+
+# static erc1155 data
+type ERC1155 @entity {
+  # token address
+  id: ID!
+  name: String!
+  symbol: String!
+  decimals: Int!
+}
+
+type StrategyType @entity {
+  # strategy hash
+  id: ID!
+  address: String!
+  createdAt: BigInt!
+}
+
+type User @entity {
+  # address
+  id: ID!
+  escrowBalances: [EscrowBalance!]! @derivedFrom(field: "user")
+}
+
+type Asset @entity {
+  # {asset-address}-{asset-id}
+  id: ID!
+  assetId: BigInt!
+  assetType: AssetType!
+  assetAddress: String!
+}
+
+type EscrowBalance @entity {
+  # {asset-entity-id}-{user-address}
+  id: ID!
+  token: Asset!
+  quantity: BigInt!
+  user: User!
+} 
+
+type Order @entity {
+  # order hash
+  id: ID!
+  orderType: OrderType
+  seller: User
+  sellAsset: Asset
+  buyAsset: Asset
+  strategyType: StrategyType
+  salt: String
+  createdAt: BigInt
+  active: Boolean
+  cancel: Cancel
+  fills: [Fill!] @derivedFrom(field: "order")
+  # strategy: SimpleOrderStrategy
+  quantity: BigInt
+  quantityLeft: BigInt
+  startsAt: BigInt
+  expiresAt: BigInt
+  askPerUnitNominator: BigInt
+  askPerUnitDenominator: BigInt
+  onlyTo: String
+  partialAllowed: Boolean
+  pricePerUnit: BigInt
+}
+
+type Fill @entity {
+  # transaction ID
+  id: ID!
+  buyer: User!
+  buyerSendsAmountFull: BigInt!
+  buyerSentAmount: BigInt!
+  sellerSendsAmountFull: BigInt!
+  sellerSentAmount: BigInt!
+  complete: Boolean!
+  order: Order!
+  createdAt: BigInt!
+}
+
+type Cancel @entity {
+  id: ID!
+  order: Order!
+  sellerGetsBackAmount: BigInt!
+  createdAt: BigInt!
+}
+
+#interface OrderStrategy {
+#  id: ID!
+#  order: Order!
+#}
+#
+#type SimpleOrderStrategy implements OrderStrategy @entity {
+# order hash
+#  id: ID!
+#  order: Order!
+#  quantity: BigInt!
+#  quantityLeft: BigInt!
+#  startsAt: BigInt!
+#  expiresAt: BigInt!
+#  askPerUnitNominator: BigInt!
+#  askPerUnitDenominator: BigInt!
+#  onlyTo: String!
+#  partialAllowed: Boolean!
+#}
+
+type LastTradedPrice @entity {
+  # {asset-address}-{asset-id}
+  id: ID!
+  asset: Asset!
+  amount: BigInt!
+  unitPrice: BigInt!
+  askPerUnitNominator: BigInt!
+  askPerUnitDenominator: BigInt!
+  user: User!
+  orderType: OrderType!
+  fill: Fill
+}
+
+interface PaymentTokenStub {
+  id: ID!
+  asset: Asset!
+  totalVolume: BigInt!
+  enabled: Boolean!
+}
+
+type PaymentToken implements PaymentTokenStub @entity {
+  id: ID!
+  asset: Asset!
+  totalVolume: BigInt!
+  enabled: Boolean!
+}
+
+type DefaultPaymentToken implements PaymentTokenStub @entity {
+  id: ID!
+  asset: Asset!
+  totalVolume: BigInt!
+  enabled: Boolean!
+}
+
+type RegisteredPaymentToken @entity {
+  # {asset-address}-{asset-address}
+  id: ID!
+  paymentToken: PaymentTokenStub!
+}
+
+type CollectionStat @entity {
+  # {asset-address}-{payment-token-id}
+  id: ID!
+  tradeCount: BigInt!
+  totalVolume: BigInt!
+  lastTrade: LastTradedPrice
+  lastSellOffer: Order
+  lastBuyOffer: Order
+  highestSellEver: LastTradedPrice
+  highestBuyEver: LastTradedPrice
+}
+
+type AssetStat @entity {
+  # {asset-id}-{payment-token-id}
+  id: ID!
+  asset: Asset!
+  collectionStat: CollectionStat!
+  tradeCount: BigInt!
+  totalVolume: BigInt!
+  lastTrade: LastTradedPrice
+  lastSellOffer: Order
+  lastBuyOffer: Order
+  highestSellEver: LastTradedPrice
+  highestBuyEver: LastTradedPrice
+}
+
+type Metadata @entity {
+  id: ID!
+  tokenAddress: String!
+  tokenId: Int!
+  animationUrl: String
+  artist_url: String
+  attributes: [Attribute!]
+  description: String
+  image: String
+  name: String
+}
+
+type Attribute @entity {
+  id: ID!
+  display: String
+  trait: String
+  value: String!
+}

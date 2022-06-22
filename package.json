@@ -1,0 +1,35 @@
+{
+  "name": "marketplace",
+  "license": "UNLICENSED",
+  "scripts": {
+    "clean": "rm -r ./build && rm -r ./generated",
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ moonsama/marketplace",
+    "prepare-moonriver": "mustache config/moonriver.json subgraph.template.yaml > subgraph.yaml",
+    "prepare-moonbeam": "mustache config/moonbeam.json subgraph.template.yaml > subgraph.yaml",
+    "prepare-volta": "mustache config/volta.json subgraph.template.yaml > subgraph.yaml",
+    "create-local": "graph create --node http://localhost:8020/ moonsama/marketplace",
+    "remove-local": "graph remove --node http://localhost:8020/ moonsama/marketplace",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 moonsama/marketplace",
+    "create-moonriver": "graph create --node https://moonriver-api-graphql.moonsama.com moonsama/marketplace",
+    "deploy-moonriver": "graph deploy --node https://moonriver-api-graphql.moonsama.com --ipfs https://ipfs.moonsama.com moonsama/marketplace",
+    "create-moonriver2": "graph create --node https://moonriver-api-graphql.moonsama.com moonsama/marketplacev2",
+    "deploy-moonriver2": "graph deploy --node https://moonriver-api-graphql.moonsama.com --ipfs https://ipfs.moonsama.com moonsama/marketplacev2",
+    "create-moonriver3": "graph create --node https://moonriver-api-graphql.moonsama.com moonsama/marketplacev3",
+    "deploy-moonriver3": "graph deploy --node https://moonriver-api-graphql.moonsama.com --ipfs https://ipfs.moonsama.com moonsama/marketplacev3",
+    "create-moonriver4": "graph create --node https://moonriver-api-graphql.moonsama.com moonsama/marketplacev4",
+    "deploy-moonriver4": "graph deploy --node https://moonriver-api-graphql.moonsama.com --ipfs https://ipfs.moonsama.com moonsama/marketplacev4",
+    "create-moonriver5": "graph create --node https://moonriver-api-graphql.moonsama.com moonsama/marketplacev5",
+    "deploy-moonriver5": "graph deploy --node https://moonriver-api-graphql.moonsama.com --ipfs https://ipfs.moonsama.com moonsama/marketplacev5",
+    "create-moonbeam4": "graph create --node https://moonbeam-api-graphql.moonsama.com moonsama/marketplacev4",
+    "deploy-moonbeam4": "graph deploy --node https://moonbeam-api-graphql.moonsama.com --ipfs https://ipfs.moonsama.com moonsama/marketplacev4"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.21.1",
+    "@graphprotocol/graph-ts": "0.20.1",
+    "@openzeppelin/subgraphs": "^0.1.8-3",
+    "axios": "^0.21.4",
+    "mustache": "^4.2.0"
+  }
+}
